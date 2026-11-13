@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
 <style>
-/* One pinned stage: headline zooms out to a laptop (a phone on small screens); each site scrolls on its screen in turn while a hand works the trackpad. */
+/* One pinned stage: headline zooms out to a laptop (a phone on small screens); each site scrolls on the laptop screen in Malcolm's desk photo. */
 :root{
   --night:#0f0d10; --desk:#1d1a1f; --ink:#f3ede4; --dim:#a39a90; --brass:#d8a85a; --metal:#3a3640;
   --display:'Anton','Impact','Arial Narrow',sans-serif; --body:'Inter',system-ui,-apple-system,sans-serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
@@ -34,25 +34,19 @@ a{color:inherit}
 .headline h1 em{font-style:normal;color:var(--brass)}
 .headline p{font:500 12px/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:20px 0 0}
 
-/* laptop */
-.rig{position:relative;width:min(820px,92vw,125vh);transform-origin:50% 40%}
-.lid{position:relative;background:linear-gradient(#2b2830,#1a181c);border-radius:18px 18px 6px 6px;padding:2.2% 2.2% 3%;box-shadow:0 30px 80px -20px #000,inset 0 0 0 1px #4a4550}
-.screen{position:relative;aspect-ratio:16/10;max-width:100%;overflow:hidden;border-radius:4px;background:#000}
+/* desk scene: Malcolm's photo, sites mapped onto the laptop glass */
+.rig{position:relative;width:min(1100px,96vw,calc(100svh*1.25));aspect-ratio:896/675;max-width:100%;transform-origin:50% 45%}
+.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:6px;
+  -webkit-mask-image:radial-gradient(120% 100% at 50% 60%,#000 60%,transparent 100%);mask-image:radial-gradient(120% 100% at 50% 60%,#000 60%,transparent 100%)}
+.screen{position:absolute;left:0;top:0;width:900px;height:506px;overflow:hidden;background:#000;transform-origin:0 0}
 .screen img{position:absolute;top:0;left:0;width:100%;max-width:none;display:block;will-change:transform;opacity:0}
 .screen img.first{opacity:1}
-.glare{position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.07),transparent 40%);pointer-events:none}
-.base{height:0;padding-bottom:5.5%;margin:0 -6%;background:linear-gradient(#55505c,#2c2930);border-radius:0 0 22px 22px;clip-path:polygon(3% 0,97% 0,100% 100%,0 100%)}
-.deck{position:relative;margin:-1px -6% 0;height:0;padding-bottom:22%;background:linear-gradient(#36323b,#242128);transform:perspective(900px) rotateX(58deg);transform-origin:50% 0;border-radius:0 0 26px 26px}
-.pad{position:absolute;left:34%;width:32%;top:46%;height:44%;border-radius:10px;background:#2e2a33;box-shadow:inset 0 0 0 1px #4d4855}
-.hand{position:absolute;right:31%;bottom:-6%;width:20%;z-index:4;pointer-events:none;filter:drop-shadow(0 18px 20px rgba(0,0,0,.55))}
-.hand .fingers{transform-box:fill-box;will-change:transform}
+.glare{position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.08),transparent 45%);pointer-events:none}
 
-/* phone layout */
-.is-phone .rig{width:min(300px,64vw,calc(46svh));}
-.is-phone .lid{border-radius:34px;padding:10px;background:linear-gradient(#2b2830,#1a181c)}
-.is-phone .screen{aspect-ratio:390/844;border-radius:26px}
-.is-phone .base,.is-phone .deck,.is-phone .hand{display:none}
-
+/* phone layout: a phone frame instead of the photo */
+.is-phone .rig{width:min(300px,64vw,calc(46svh));aspect-ratio:390/844}
+.is-phone .photo{display:none}
+.is-phone .screen{position:absolute;inset:0;width:auto;height:auto;transform:none!important;border-radius:30px;border:10px solid #242128;box-shadow:0 30px 80px -20px #000,0 0 0 1px #4a4550}
 .captions{position:absolute;left:var(--gutter-l);bottom:calc(28px + env(safe-area-inset-bottom,0px));z-index:6;width:min(360px,calc(100vw - 32px))}
 .cap{position:absolute;left:0;bottom:0;width:100%;display:grid;gap:8px;opacity:0;visibility:hidden}
 .cap .k{font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--brass)}
@@ -103,29 +97,13 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
     </div>
 
     <div class="rig" id="rig">
-      <div class="lid">
-        <div class="screen" id="screen">
-          <img class="first" data-site="harlem-haberdashery" alt="Harlem Haberdashery website scrolling">
-          <img data-site="harlem-chocolate-factory" alt="Harlem Chocolate Factory website scrolling">
-          <img data-site="bakery" alt="Bakery streetwear website scrolling">
-          <div class="glare"></div>
-        </div>
+      <img class="photo" src="img/desk-scene.jpg" alt="">
+      <div class="screen" id="screen">
+        <img class="first" data-site="harlem-haberdashery" alt="Harlem Haberdashery website scrolling">
+        <img data-site="harlem-chocolate-factory" alt="Harlem Chocolate Factory website scrolling">
+        <img data-site="bakery" alt="Bakery streetwear website scrolling">
+        <div class="glare"></div>
       </div>
-      <div class="base"></div>
-      <div class="deck"><div class="pad"></div></div>
-      <svg class="hand" viewBox="0 0 200 260" aria-hidden="true">
-        <g fill="#7a4f36">
-          <g class="fingers" id="fingers">
-            <rect x="58" y="6" width="26" height="110" rx="13"/>
-            <rect x="90" y="0" width="26" height="118" rx="13"/>
-          </g>
-          <rect x="30" y="70" width="22" height="88" rx="11" transform="rotate(-18 41 114)"/>
-          <rect x="120" y="40" width="24" height="90" rx="12" fill="#6c4530"/>
-          <rect x="146" y="58" width="22" height="80" rx="11" fill="#6c4530"/>
-          <rect x="44" y="96" width="132" height="110" rx="46"/>
-          <rect x="70" y="180" width="100" height="90" rx="30"/>
-        </g>
-      </svg>
     </div>
 
     <div class="captions">
@@ -195,8 +173,23 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
   const phoneMQ=matchMedia('(max-width: 700px)');
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const imgs=[...document.querySelectorAll('#screen img')];
-  const screen=document.getElementById('screen'), fingers=document.getElementById('fingers');
+  const screen=document.getElementById('screen'), rig=document.getElementById('rig');
   let tl;
+
+  // Map the 900x506 screen box onto the laptop glass in the photo (corners measured on the 896x675 crop)
+  const QUAD=[[241,96],[669,91],[674,346],[234,346]];
+  function adj(m){return[m[4]*m[8]-m[5]*m[7],m[2]*m[7]-m[1]*m[8],m[1]*m[5]-m[2]*m[4],m[5]*m[6]-m[3]*m[8],m[0]*m[8]-m[2]*m[6],m[2]*m[3]-m[0]*m[5],m[3]*m[7]-m[4]*m[6],m[1]*m[6]-m[0]*m[7],m[0]*m[4]-m[1]*m[3]];}
+  function mm(a,b){const c=[];for(let i=0;i<3;i++)for(let j=0;j<3;j++){let t=0;for(let k=0;k<3;k++)t+=a[3*i+k]*b[3*k+j];c[3*i+j]=t;}return c;}
+  function mv(m,v){return[m[0]*v[0]+m[1]*v[1]+m[2]*v[2],m[3]*v[0]+m[4]*v[1]+m[5]*v[2],m[6]*v[0]+m[7]*v[1]+m[8]*v[2]];}
+  function basis(p){const m=[p[0][0],p[1][0],p[2][0],p[0][1],p[1][1],p[2][1],1,1,1];const v=mv(adj(m),[p[3][0],p[3][1],1]);return mm(m,[v[0],0,0,0,v[1],0,0,0,v[2]]);}
+  function fitScreen(){
+    if(phoneMQ.matches){screen.style.transform='';return;}
+    const k=rig.offsetWidth/896, w=900, h=506;
+    const dst=QUAD.map(([x,y])=>[x*k,y*k]);
+    const src=[[0,0],[w,0],[w,h],[0,h]];
+    let t=mm(basis(dst),adj(basis(src)));t=t.map(x=>x/t[8]);
+    screen.style.transform='matrix3d('+[t[0],t[3],0,t[6],t[1],t[4],0,t[7],0,0,1,0,t[2],t[5],0,t[8]].join(',')+')';
+  }
 
   function setSources(){
     const mode=phoneMQ.matches?'phone':'desk';
@@ -214,13 +207,12 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
     gsap.set(imgs,{y:0,opacity:(i)=>i===0?1:0});
     gsap.set('.cap',{autoAlpha:0,y:16});
     gsap.set('#headline',{opacity:1,scale:1});
-    gsap.set('#rig',{scale:phoneMQ.matches?1.8:2.6,y:'38vh',opacity:.25});
+    gsap.set('#rig',{scale:phoneMQ.matches?1.8:1.5,y:phoneMQ.matches?'38vh':'22vh',opacity:.3});
     meter(0);
-    const travel=im=>()=>-Math.max(0,im.offsetHeight-screen.offsetHeight);
+    const travel=im=>()=>-Math.max(0,im.offsetHeight-screen.clientHeight);
     tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:'#scroller',start:'top top',end:'bottom bottom',scrub:reduce?true:0.6,
       onUpdate:self=>{
         const p=self.progress;
-        if(p>.14&&p<.92){const s=((p-.14)*48)%1; gsap.set(fingers,{y:Math.sin(s*Math.PI)*16});} else gsap.set(fingers,{y:0});
         meter(p<.43?0:p<.68?1:2);
       }}});
     tl.to('#headline',{opacity:0,scale:.92,duration:.1})
@@ -234,10 +226,10 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
     tl.to('#rig',{scale:.86,opacity:.4,duration:.06}).to('#cap2',{autoAlpha:0,duration:.03},'<');
   }
 
-  function init(){setSources().then(()=>{build();ScrollTrigger.refresh();});}
+  function init(){setSources().then(()=>{fitScreen();build();ScrollTrigger.refresh();});}
   init();
   phoneMQ.addEventListener('change',init);
-  addEventListener('resize',()=>ScrollTrigger.refresh());
+  addEventListener('resize',()=>{fitScreen();ScrollTrigger.refresh();});
 })();
 </script>
 </body>
