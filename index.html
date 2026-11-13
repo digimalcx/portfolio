@@ -7,13 +7,15 @@
 <meta name="description" content="Websites people never want to leave. Custom sites for shops, makers and small businesses in Harlem and beyond.">
 <meta property="og:title" content="Sites by Kay">
 <meta property="og:description" content="Websites people never want to leave.">
-<meta property="og:image" content="img/harlem-haberdashery-desk.jpg">
+<meta property="og:image" content="media/street.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="preload" as="image" href="media/street.jpg">
 <style>
+/* Desktop: a scroll-scrubbed film. Street at dusk -> through the window -> the desk. Then the visitor's scroll drives the hand on the trackpad and the sites on the laptop. Phone: a lighter phone-frame version. */
 :root{
-  --night:#0f0d10; --desk:#1d1a1f; --ink:#f3ede4; --dim:#a39a90; --brass:#d8a85a; --metal:#3a3640;
+  --night:#0d0b0e; --desk:#1d1a1f; --ink:#f3ede4; --dim:#a39a90; --brass:#d8a85a; --metal:#3a3640;
   --display:'Anton','Impact','Arial Narrow',sans-serif; --body:'Inter',system-ui,-apple-system,sans-serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
   --gutter-l:max(16px,env(safe-area-inset-left,0px)); --gutter-r:max(16px,env(safe-area-inset-right,0px));
   color-scheme:dark;
@@ -22,47 +24,59 @@
 html,body{margin:0;background:var(--night);color:var(--ink);font-family:var(--body)}
 img{max-width:100%}
 a{color:inherit}
-.brand{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:var(--gutter-l);z-index:20;font:400 20px/1 var(--display);letter-spacing:.04em;text-transform:uppercase;text-decoration:none}
+.brand{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:var(--gutter-l);z-index:20;font:400 20px/1 var(--display);letter-spacing:.04em;text-transform:uppercase;text-decoration:none;text-shadow:0 1px 12px rgba(0,0,0,.6)}
 .brand span{color:var(--brass)}
 .talk{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:var(--gutter-r);z-index:20;font:600 13px/1 var(--body);color:var(--night);background:var(--brass);padding:10px 16px;border-radius:999px;text-decoration:none}
-.scroller{height:900vh;position:relative}
-.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:grid;place-items:center;
-  background:radial-gradient(120% 80% at 50% 110%,var(--desk) 0%,var(--night) 60%)}
-.headline{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding-left:var(--gutter-l);padding-right:var(--gutter-r);z-index:5;pointer-events:none}
-.headline h1{font:400 clamp(48px,10.5vw,156px)/.92 var(--display);text-transform:uppercase;margin:0;text-wrap:balance;letter-spacing:.01em}
-.headline h1 em{font-style:normal;color:var(--brass)}
-.headline p{font:500 12px/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:20px 0 0}
+.scroller{height:1000vh;position:relative}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--night)}
 
-.rig{position:absolute;left:0;top:0;aspect-ratio:896/1195;transform-origin:0 0}
-.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:6px;
-  -webkit-mask-image:radial-gradient(120% 100% at 50% 60%,#000 60%,transparent 100%);mask-image:radial-gradient(120% 100% at 50% 60%,#000 60%,transparent 100%)}
-.screen{position:absolute;left:0;top:0;width:900px;height:506px;overflow:hidden;background:#000;transform-origin:0 0}
-.screen img{position:absolute;top:0;left:0;width:100%;max-width:none;display:block;will-change:transform;opacity:0}
-.screen img.first{opacity:1}
-.glare{position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.08),transparent 45%);pointer-events:none}
+/* the film box: 16:9-ish, sized to cover the viewport */
+.box{position:absolute;left:0;top:0;transform-origin:50% 50%;will-change:transform}
+.box > *{position:absolute}
+#film,#hero{inset:0;width:100%;height:100%;display:block;max-width:none}
+#hero{opacity:0}
+.screen{left:28.68%;top:22.17%;width:42.52%;height:43.36%;overflow:hidden;background:#000;opacity:0}
+.screen img{position:absolute;left:0;top:0;width:100%;max-width:none;display:block;will-change:transform;opacity:0}
+.screen::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(118deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,.03) 28%,transparent 46%),radial-gradient(120% 90% at 50% 120%,rgba(216,168,90,.10),transparent 60%);
+  box-shadow:inset 0 0 24px rgba(0,0,0,.55)}
+#hand{left:43.75%;top:64.46%;width:35.42%;height:35.73%;opacity:0;
+  -webkit-mask-image:radial-gradient(70% 75% at 55% 70%,#000 62%,transparent 100%);mask-image:radial-gradient(70% 75% at 55% 70%,#000 62%,transparent 100%)}
+.vignette{inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 55%,transparent 55%,rgba(0,0,0,.55) 100%)}
 
-.is-phone .rig{position:relative;left:auto;top:auto;width:min(300px,64vw,calc(46svh));aspect-ratio:390/844;transform-origin:50% 40%}
-.hint{position:absolute;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:6;font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink);background:rgba(15,13,16,.7);padding:10px 14px;border-radius:999px;white-space:nowrap}
-html:not(.is-phone) .headline{display:none}
-.is-phone .hint{display:none}
-.is-phone .photo{display:none}
-.is-phone .screen{position:absolute;inset:0;width:auto;height:auto;transform:none!important;border-radius:30px;border:10px solid #242128;box-shadow:0 30px 80px -20px #000,0 0 0 1px #4a4550}
+.title{position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:5;pointer-events:none;padding-left:var(--gutter-l);padding-right:var(--gutter-r)}
+.title h1{font:400 clamp(56px,11vw,172px)/.88 var(--display);text-transform:uppercase;margin:0;letter-spacing:.02em;text-shadow:0 6px 40px rgba(0,0,0,.55)}
+.title h1 span{color:var(--brass)}
+.title p{font:500 13px/1.5 var(--mono);letter-spacing:.22em;text-transform:uppercase;margin:18px 0 0;text-shadow:0 2px 16px rgba(0,0,0,.8)}
+.hint{position:absolute;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:6;font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;background:rgba(13,11,14,.6);backdrop-filter:blur(6px);padding:10px 14px;border-radius:999px;white-space:nowrap}
+.loader{position:absolute;left:50%;bottom:calc(64px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:6;width:120px;height:2px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
+.loader i{display:block;height:100%;width:0;background:var(--brass);transition:width .2s}
+
 .captions{position:absolute;left:var(--gutter-l);bottom:calc(28px + env(safe-area-inset-bottom,0px));z-index:6;width:min(360px,calc(100vw - 32px))}
-.cap{position:absolute;left:0;bottom:0;width:100%;display:grid;gap:8px;opacity:0;visibility:hidden;background:rgba(15,13,16,.82);padding:16px 18px;border-radius:14px;backdrop-filter:blur(8px)}
+.cap{position:absolute;left:0;bottom:0;width:100%;display:grid;gap:8px;opacity:0;visibility:hidden;background:rgba(13,11,14,.78);padding:16px 18px;border-radius:14px;backdrop-filter:blur(10px);box-shadow:0 0 0 1px rgba(216,168,90,.18)}
 .cap .k{font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--brass)}
 .cap .t{font:400 36px/1 var(--display);text-transform:uppercase}
 .cap .d{font:400 14px/1.5 var(--body);color:var(--dim);margin:0}
 .cap a{justify-self:start;font:600 13px/1 var(--body);text-decoration:none;border:1px solid var(--brass);color:var(--brass);padding:10px 14px;border-radius:999px;margin-top:4px}
 .cap a:hover,.cap a:focus-visible{background:var(--brass);color:var(--night);outline:none}
-.meter{position:absolute;right:var(--gutter-r);top:50%;transform:translateY(-50%);z-index:6;display:grid;gap:10px;font:500 11px/1 var(--mono);color:var(--dim);letter-spacing:.1em}
-.meter span{display:flex;align-items:center;gap:8px;transition:color .3s}
+.meter{position:absolute;right:var(--gutter-r);top:50%;transform:translateY(-50%);z-index:6;display:grid;gap:10px;font:500 11px/1 var(--mono);color:var(--dim);letter-spacing:.1em;opacity:0}
+.meter span{display:flex;align-items:center;gap:8px;transition:color .3s;text-shadow:0 1px 8px rgba(0,0,0,.8)}
 .meter i{width:22px;height:2px;background:var(--metal);transition:background .3s}
 .meter span.on{color:var(--ink)} .meter span.on i{background:var(--brass)}
-.is-phone .meter{display:none}
+
+/* phone: street still behind the title, then a phone frame */
+.is-phone .box{display:none}
+.phone-bg{position:absolute;inset:0;background:url(media/street.jpg) 38% 50%/cover;display:none}
+.phone-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(13,11,14,.35),rgba(13,11,14,.75))}
+.is-phone .phone-bg{display:block}
+.pframe{display:none;position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(290px,64vw,calc(44svh));aspect-ratio:390/844;border-radius:32px;border:10px solid #1f1c22;box-shadow:0 30px 80px -10px #000,0 0 0 1px #4a4550;overflow:hidden;background:#000;z-index:4;opacity:0}
+.is-phone .pframe{display:block}
+.pframe img{position:absolute;left:0;top:0;width:100%;max-width:none;opacity:0}
+.is-phone .meter,.is-phone .loader{display:none}
 .is-phone .captions{bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 .is-phone .cap .t{font-size:24px}
 .is-phone .cap .d{display:none}
-.is-phone .cap{background:rgba(15,13,16,.86);padding:12px 14px;border-radius:12px;backdrop-filter:blur(6px)}
+.is-phone .cap{padding:12px 14px;border-radius:12px}
 
 .work{padding-block:96px 40px;padding-left:var(--gutter-l);padding-right:var(--gutter-r);max-width:1180px;margin:0 auto}
 .work h2,.contact h2{font:400 clamp(40px,7vw,88px)/.95 var(--display);text-transform:uppercase;margin:0 0 32px;text-wrap:balance}
@@ -88,24 +102,33 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
 <a class="talk" href="#contact">Let's talk</a>
 
 <div class="scroller" id="scroller">
-  <div class="stage">
-    <div class="headline" id="headline">
-      <div>
-        <h1>Websites people never <em>want to leave</em></h1>
-        <p>Scroll to see the work</p>
-      </div>
-    </div>
-
-    <div class="hint" id="hint">Scroll to see the work</div>
-    <div class="rig" id="rig">
-      <img class="photo" src="img/desk-scene.jpg" alt="">
+  <div class="stage" id="stage">
+    <div class="phone-bg"></div>
+    <div class="box" id="box">
+      <canvas id="film" width="1152" height="652"></canvas>
+      <img id="hero" src="media/hero.webp" alt="">
       <div class="screen" id="screen">
-        <img class="first" data-site="harlem-haberdashery" alt="Harlem Haberdashery website scrolling">
+        <img data-site="harlem-haberdashery" alt="Harlem Haberdashery website scrolling">
         <img data-site="harlem-chocolate-factory" alt="Harlem Chocolate Factory website scrolling">
         <img data-site="bakery" alt="Bakery streetwear website scrolling">
-        <div class="glare"></div>
+      </div>
+      <canvas id="hand" width="680" height="388"></canvas>
+      <div class="vignette"></div>
+    </div>
+    <div class="pframe" id="pframe">
+      <img data-site="harlem-haberdashery" alt="">
+      <img data-site="harlem-chocolate-factory" alt="">
+      <img data-site="bakery" alt="">
+    </div>
+
+    <div class="title" id="title">
+      <div>
+        <h1>Sites by <span>Kay</span></h1>
+        <p>Websites people never want to leave</p>
       </div>
     </div>
+    <div class="loader" id="loader"><i></i></div>
+    <div class="hint" id="hint">Scroll to step inside</div>
 
     <div class="captions">
       <div class="cap" id="cap0">
@@ -128,7 +151,7 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
       </div>
     </div>
 
-    <div class="meter" aria-hidden="true">
+    <div class="meter" id="meter" aria-hidden="true">
       <span id="m0"><i></i>01 Menswear</span>
       <span id="m1"><i></i>02 Chocolatier</span>
       <span id="m2"><i></i>03 Streetwear</span>
@@ -169,82 +192,95 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 (function(){
-  if(!window.gsap){document.querySelectorAll('.cap')[0].style.cssText='opacity:1;visibility:visible';return;}
-  gsap.registerPlugin(ScrollTrigger);
+  const OPENER_N=97, HAND_N=60;          // frame counts in media/opener and media/hand
+  const ASPECT=1920/1086;                          // film aspect
+  const SITES=['harlem-haberdashery','harlem-chocolate-factory','bakery'];
+  const $=id=>document.getElementById(id);
   const phoneMQ=matchMedia('(max-width: 700px)');
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const imgs=[...document.querySelectorAll('#screen img')];
-  const screen=document.getElementById('screen'), rig=document.getElementById('rig');
-  let tl;
+  const box=$('box'), film=$('film'), fctx=film.getContext('2d'), hand=$('hand'), hctx=hand.getContext('2d');
+  const screenImgs=[...document.querySelectorAll('#screen img')], phoneImgs=[...document.querySelectorAll('#pframe img')];
+  const caps=[0,1,2].map(i=>$('cap'+i));
+  const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)), seg=(p,a,b)=>clamp((p-a)/(b-a));
+  const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
 
-  const QUAD=[[233,599],[675,596],[684,868],[227,868]];
-  const FOCUS={x:130,y:585,w:660,h:500};
-  function place(){
-    if(phoneMQ.matches){rig.style.width='';rig.style.left='';rig.style.top='';return;}
-    const vw=innerWidth,vh=innerHeight,w=Math.min(vw*.96,vh*.96*896/1195);
-    rig.style.width=w+'px';rig.style.left=(vw-w)/2+'px';rig.style.top=(vh-w*1195/896)/2+'px';
+  // ---------- frames ----------
+  const opener=new Array(OPENER_N), handF=new Array(HAND_N);
+  let loaded=0; const total=OPENER_N+HAND_N;
+  function load(arr,n,dir,cb){for(let i=0;i<n;i++){const im=new Image();im.decoding='async';
+    im.onload=()=>{loaded++;$('loader').firstChild.style.width=(loaded/total*100)+'%';if(loaded===total)$('loader').style.opacity=0;cb&&cb(i);};
+    im.src=dir+String(i).padStart(3,'0')+'.webp';arr[i]=im;}}
+  const street=new Image(); street.src='media/street.jpg'; street.onload=()=>draw(state.p);
+  function frameNear(arr,i){for(let d=0;d<arr.length;d++){const a=arr[i-d],b=arr[i+d];if(a&&a.complete&&a.naturalWidth)return a;if(b&&b.complete&&b.naturalWidth)return b;}return null;}
+
+  // ---------- layout ----------
+  function layout(){
+    const vw=innerWidth,vh=innerHeight;let w=Math.max(vw,vh*ASPECT),h=w/ASPECT;
+    box.style.width=w+'px';box.style.height=h+'px';box.style.left=(vw-w)/2+'px';box.style.top=(vh-h)/2+'px';
   }
-  function zoom(){
-    const vw=innerWidth,vh=innerHeight,k=rig.offsetWidth/896;
-    const s=Math.min(vw*.94/(FOCUS.w*k),vh*.9/(FOCUS.h*k));
-    const cx=(FOCUS.x+FOCUS.w/2)*k,cy=(FOCUS.y+FOCUS.h/2)*k;
-    return {s,x:vw/2-rig.offsetLeft-s*cx,y:vh/2-rig.offsetTop-s*cy};
-  }
-  function adj(m){return[m[4]*m[8]-m[5]*m[7],m[2]*m[7]-m[1]*m[8],m[1]*m[5]-m[2]*m[4],m[5]*m[6]-m[3]*m[8],m[0]*m[8]-m[2]*m[6],m[2]*m[3]-m[0]*m[5],m[3]*m[7]-m[4]*m[6],m[1]*m[6]-m[0]*m[7],m[0]*m[4]-m[1]*m[3]];}
-  function mm(a,b){const c=[];for(let i=0;i<3;i++)for(let j=0;j<3;j++){let t=0;for(let k=0;k<3;k++)t+=a[3*i+k]*b[3*k+j];c[3*i+j]=t;}return c;}
-  function mv(m,v){return[m[0]*v[0]+m[1]*v[1]+m[2]*v[2],m[3]*v[0]+m[4]*v[1]+m[5]*v[2],m[6]*v[0]+m[7]*v[1]+m[8]*v[2]];}
-  function basis(p){const m=[p[0][0],p[1][0],p[2][0],p[0][1],p[1][1],p[2][1],1,1,1];const v=mv(adj(m),[p[3][0],p[3][1],1]);return mm(m,[v[0],0,0,0,v[1],0,0,0,v[2]]);}
-  function fitScreen(){
-    if(phoneMQ.matches){screen.style.transform='';return;}
-    const k=rig.offsetWidth/896, w=900, h=506;
-    const dst=QUAD.map(([x,y])=>[x*k,y*k]);
-    const src=[[0,0],[w,0],[w,h],[0,h]];
-    let t=mm(basis(dst),adj(basis(src)));t=t.map(x=>x/t[8]);
-    screen.style.transform='matrix3d('+[t[0],t[3],0,t[6],t[1],t[4],0,t[7],0,0,1,0,t[2],t[5],0,t[8]].join(',')+')';
+
+  // ---------- timeline (p = 0..1 over the pinned section) ----------
+  // 0-.18 film: street -> desk | .18-.21 settle | .21-.93 three sites | .93-1 pull back
+  const S0=.21,S1=.93,PER=(S1-S0)/SITES.length;
+  function siteState(p){const t=clamp((p-S0)/(S1-S0))*SITES.length;const i=Math.min(SITES.length-1,Math.floor(t));return {i,local:t-i};}
+  const state={p:0};
+  function draw(p){
+    const phone=phoneMQ.matches;
+    // title + hint
+    const tOut=seg(p,.0,.07); $('title').style.opacity=1-tOut; $('title').style.transform='scale('+(1+tOut*.06)+')';
+    $('hint').style.opacity=1-seg(p,0,.03);
+    const {i,local}=siteState(p); const inSites=p>=S0&&p<=S1;
+    // captions + meter
+    caps.forEach((c,k)=>{const on=inSites&&k===i;const fade=on?Math.min(1,local*12,(1-local)*12+ (k===SITES.length-1?1:0)):0;
+      c.style.opacity=fade;c.style.visibility=fade>0.02?'visible':'hidden';c.style.transform='translateY('+(1-fade)*14+'px)';});
+    $('meter').style.opacity=seg(p,S0-.02,S0)*(1-seg(p,S1,S1+.02));
+    for(let k=0;k<3;k++)$('m'+k).classList.toggle('on',k===i);
+    // site images: slide within screen, crossfade at each boundary
+    const imgs=phone?phoneImgs:screenImgs, holder=phone?$('pframe'):$('screen');
+    imgs.forEach((im,k)=>{
+      const vis=k===i?1:0; im.style.opacity=vis;
+      if(k===i){const travel=Math.max(0,im.offsetHeight-holder.clientHeight);
+        const lp=clamp((local-.06)/.88); im.style.transform='translateY('+(-travel*ease(lp))+'px)';}
+    });
+    if(phone){
+      $('pframe').style.opacity=seg(p,.06,.14);
+      return;
+    }
+    // film frames
+    const fp=seg(p,0,.18); const fi=Math.round(fp*(OPENER_N-1));
+    const fr=frameNear(opener,fi)||(fi<OPENER_N*0.2?street:null);
+    if(fr){fctx.drawImage(fr,0,0,film.width,film.height);}
+    const heroIn=seg(p,.175,.19); $('hero').style.opacity=heroIn; film.style.opacity=1-seg(p,.19,.2);
+    $('screen').style.opacity=seg(p,.19,.21); hand.style.opacity=seg(p,.19,.21)*(1-seg(p,S1,S1+.03));
+    // hand: three swipes per site, locked to scroll
+    if(inSites||p>.18){const hp=(p<S0?0:(p>S1?0:((local*3)%1)));const hf=frameNear(handF,Math.round(hp*(HAND_N-1)));
+      if(hf){hctx.clearRect(0,0,hand.width,hand.height);hctx.drawImage(hf,0,0,hand.width,hand.height);}}
+    // camera: gentle push toward the laptop during the sites, ease back at the end
+    const push=ease(seg(p,.19,.24))*(1-ease(seg(p,S1,1)));
+    const s=1+push*.22; box.style.transform='translateY('+(push*-3)+'%) scale('+s+')';
   }
 
   function setSources(){
     const mode=phoneMQ.matches?'phone':'desk';
     document.documentElement.classList.toggle('is-phone',phoneMQ.matches);
-    return Promise.all(imgs.map(im=>new Promise(res=>{
-      const src='img/'+im.dataset.site+'-'+mode+'.jpg';
-      if(im.getAttribute('src')===src&&im.complete)return res();
-      im.onload=im.onerror=()=>res(); im.src=src;
-    })));
-  }
-  function meter(i){for(let j=0;j<3;j++)document.getElementById('m'+j).classList.toggle('on',j===i);}
-
-  function build(){
-    if(tl){tl.scrollTrigger.kill();tl.kill();}
-    gsap.set(imgs,{y:0,opacity:(i)=>i===0?1:0});
-    gsap.set('.cap',{autoAlpha:0,y:16});
-    gsap.set('#headline',{opacity:1,scale:1});
-    const desk=!phoneMQ.matches;
-    if(desk) gsap.set('#rig',{scale:1,x:0,y:0,opacity:1}); else gsap.set('#rig',{scale:1.8,x:0,y:'38vh',opacity:.3});
-    gsap.set('#hint',{autoAlpha:1});
-    meter(0);
-    const travel=im=>()=>-Math.max(0,im.offsetHeight-screen.clientHeight);
-    tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:'#scroller',start:'top top',end:'bottom bottom',scrub:reduce?true:0.6,
-      onUpdate:self=>{
-        const p=self.progress;
-        meter(p<.43?0:p<.68?1:2);
-      }}});
-    if(desk){tl.to('#hint',{autoAlpha:0,duration:.03}).to('#rig',{scale:()=>zoom().s,x:()=>zoom().x,y:()=>zoom().y,duration:.12,ease:'power2.inOut'},'<');}
-    else{tl.to('#headline',{opacity:0,scale:.92,duration:.1}).to('#rig',{scale:1,y:0,opacity:1,duration:.1,ease:'power2.inOut'},'<.02');}
-    imgs.forEach((im,i)=>{
-      const cap='#cap'+i;
-      if(i>0){tl.to(imgs[i-1],{opacity:0,duration:.02}).to(im,{opacity:1,duration:.02},'<').to('#cap'+(i-1),{autoAlpha:0,y:-10,duration:.02},'<');}
-      tl.to(cap,{autoAlpha:1,y:0,duration:.02})
-        .to(im,{y:travel(im),duration:.22});
-    });
-    if(desk) tl.to('#rig',{scale:1,x:0,y:0,duration:.08,ease:'power2.inOut'}).to('#cap2',{autoAlpha:0,duration:.03},'<');
-    else tl.to('#rig',{scale:.86,opacity:.4,duration:.06}).to('#cap2',{autoAlpha:0,duration:.03},'<');
+    const imgs=phoneMQ.matches?phoneImgs:screenImgs;
+    return Promise.all(imgs.map(im=>new Promise(res=>{const src='img/'+im.dataset.site+'-'+mode+'.jpg';
+      if(im.getAttribute('src')===src&&im.complete)return res(); im.onload=im.onerror=()=>res(); im.src=src;})));
   }
 
-  function init(){setSources().then(()=>{place();fitScreen();build();ScrollTrigger.refresh();});}
+  let started=false;
+  function init(){
+    layout();
+    if(!phoneMQ.matches&&!started){started=true;load(opener,OPENER_N,'media/opener/',i=>{if(Math.abs(i-Math.round(seg(state.p,0,.18)*(OPENER_N-1)))<2)draw(state.p)});load(handF,HAND_N,'media/hand/');}
+    setSources().then(()=>{if(window.ScrollTrigger)ScrollTrigger.refresh();draw(state.p);});
+  }
+
+  if(!window.gsap){init();caps[0].style.cssText='opacity:1;visibility:visible';return;}
+  gsap.registerPlugin(ScrollTrigger);
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  gsap.to(state,{p:1,ease:'none',scrollTrigger:{trigger:'#scroller',start:'top top',end:'bottom bottom',scrub:reduce?true:.5},onUpdate:()=>draw(state.p)});
   init();
   phoneMQ.addEventListener('change',init);
-  addEventListener('resize',()=>{place();fitScreen();ScrollTrigger.refresh();});
+  addEventListener('resize',()=>{layout();ScrollTrigger.refresh();draw(state.p);});
 })();
 </script>
 </body>
