@@ -116,14 +116,6 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
         <img data-site="bakery" alt="Bakery streetwear website scrolling">
         <div class="glare"></div>
       </div>
-      <!-- Photorealistic tactile trackpad hand mockup -->
-      <div class="hand-overlay" id="hand">
-        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M110 30C110 30 125 70 130 95C135 120 142 165 110 185C80 202 55 180 45 155C35 130 25 90 25 90" stroke="#b89774" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
-          <path d="M125 65C125 65 148 85 158 105C168 125 172 150 155 170" stroke="#c4a27e" stroke-width="18" stroke-linecap="round" opacity="0.85"/>
-          <circle cx="115" cy="55" r="14" fill="#d0ae88" opacity="0.9"/>
-        </svg>
-      </div>
     </div>
 
     <div class="captions">
@@ -239,7 +231,6 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
     gsap.set(imgs,{y:0,opacity:(i)=>i===0?1:0});
     gsap.set('.cap',{autoAlpha:0,y:16});
     gsap.set('#headline',{opacity:1,scale:1});
-    gsap.set('#hand',{opacity:0,y:20});
     const desk=!phoneMQ.matches;
     if(desk) gsap.set('#rig',{scale:1,x:0,y:0,opacity:1}); else gsap.set('#rig',{scale:1.8,x:0,y:'38vh',opacity:.3});
     gsap.set('#hint',{autoAlpha:1});
@@ -252,8 +243,7 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
       }}});
     if(desk){
       tl.to('#hint',{autoAlpha:0,duration:.03})
-        .to('#rig',{scale:()=>zoom().s,x:()=>zoom().x,y:()=>zoom().y,duration:.12,ease:'power2.inOut'},'<')
-        .to('#hand',{opacity:1,y:0,duration:.05},'<.05');
+        .to('#rig',{scale:()=>zoom().s,x:()=>zoom().x,y:()=>zoom().y,duration:.12,ease:'power2.inOut'},'<');
     }
     else{tl.to('#headline',{opacity:0,scale:.92,duration:.1}).to('#rig',{scale:1,y:0,opacity:1,duration:.1,ease:'power2.inOut'},'<.02');}
     
@@ -262,14 +252,12 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
       if(i>0){
         tl.to(imgs[i-1],{opacity:0,duration:.02})
           .to(im,{opacity:1,duration:.02},'<')
-          .to('#cap'+(i-1),{autoAlpha:0,y:-10,duration:.02},'<')
-          .to('#hand',{y:i*10-5,rotation:i%2===0?-1:1,duration:.05},'<');
+          .to('#cap'+(i-1),{autoAlpha:0,y:-10,duration:.02},'<');
       }
       tl.to(cap,{autoAlpha:1,y:0,duration:.02})
-        .to(im,{y:travel(im),duration:.22})
-        .to('#hand',{y:()=>Math.sin(i*2)*8 + 15, duration:.15},'<');
+        .to(im,{y:travel(im),duration:.22});
     });
-    if(desk) tl.to('#rig',{scale:1,x:0,y:0,duration:.08,ease:'power2.inOut'}).to('#cap2',{autoAlpha:0,duration:.03},'<').to('#hand',{opacity:0,y:20,duration:.03},'<');
+    if(desk) tl.to('#rig',{scale:1,x:0,y:0,duration:.08,ease:'power2.inOut'}).to('#cap2',{autoAlpha:0,duration:.03},'<');
     else tl.to('#rig',{scale:.86,opacity:.4,duration:.06}).to('#cap2',{autoAlpha:0,duration:.03},'<');
   }
 
