@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
 <style>
-/* One pinned stage: headline zooms out to a laptop (a phone on small screens); each site scrolls on the laptop screen in Malcolm's desk photo. */
+/* One pinned stage. Desktop: Malcolm's desk photo, brand on the monitor, camera pushes in to the laptop where each site scrolls. Phone: headline, then a phone frame. */
 :root{
   --night:#0f0d10; --desk:#1d1a1f; --ink:#f3ede4; --dim:#a39a90; --brass:#d8a85a; --metal:#3a3640;
   --display:'Anton','Impact','Arial Narrow',sans-serif; --body:'Inter',system-ui,-apple-system,sans-serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
@@ -35,7 +35,7 @@ a{color:inherit}
 .headline p{font:500 12px/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:20px 0 0}
 
 /* desk scene: Malcolm's photo, sites mapped onto the laptop glass */
-.rig{position:relative;width:min(1100px,96vw,calc(100svh*1.25));aspect-ratio:896/675;max-width:100%;transform-origin:50% 45%}
+.rig{position:absolute;left:0;top:0;aspect-ratio:896/1195;transform-origin:0 0}
 .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:6px;
   -webkit-mask-image:radial-gradient(120% 100% at 50% 60%,#000 60%,transparent 100%);mask-image:radial-gradient(120% 100% at 50% 60%,#000 60%,transparent 100%)}
 .screen{position:absolute;left:0;top:0;width:900px;height:506px;overflow:hidden;background:#000;transform-origin:0 0}
@@ -44,11 +44,14 @@ a{color:inherit}
 .glare{position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.08),transparent 45%);pointer-events:none}
 
 /* phone layout: a phone frame instead of the photo */
-.is-phone .rig{width:min(300px,64vw,calc(46svh));aspect-ratio:390/844}
+.is-phone .rig{position:relative;left:auto;top:auto;width:min(300px,64vw,calc(46svh));aspect-ratio:390/844;transform-origin:50% 40%}
+.hint{position:absolute;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:6;font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink);background:rgba(15,13,16,.7);padding:10px 14px;border-radius:999px;white-space:nowrap}
+html:not(.is-phone) .headline{display:none}
+.is-phone .hint{display:none}
 .is-phone .photo{display:none}
 .is-phone .screen{position:absolute;inset:0;width:auto;height:auto;transform:none!important;border-radius:30px;border:10px solid #242128;box-shadow:0 30px 80px -20px #000,0 0 0 1px #4a4550}
 .captions{position:absolute;left:var(--gutter-l);bottom:calc(28px + env(safe-area-inset-bottom,0px));z-index:6;width:min(360px,calc(100vw - 32px))}
-.cap{position:absolute;left:0;bottom:0;width:100%;display:grid;gap:8px;opacity:0;visibility:hidden}
+.cap{position:absolute;left:0;bottom:0;width:100%;display:grid;gap:8px;opacity:0;visibility:hidden;background:rgba(15,13,16,.82);padding:16px 18px;border-radius:14px;backdrop-filter:blur(8px)}
 .cap .k{font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--brass)}
 .cap .t{font:400 36px/1 var(--display);text-transform:uppercase}
 .cap .d{font:400 14px/1.5 var(--body);color:var(--dim);margin:0}
@@ -96,6 +99,7 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
       </div>
     </div>
 
+    <div class="hint" id="hint">Scroll to see the work</div>
     <div class="rig" id="rig">
       <img class="photo" src="img/desk-scene.jpg" alt="">
       <div class="screen" id="screen">
@@ -176,8 +180,20 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
   const screen=document.getElementById('screen'), rig=document.getElementById('rig');
   let tl;
 
-  // Map the 900x506 screen box onto the laptop glass in the photo (corners measured on the 896x675 crop)
-  const QUAD=[[241,96],[669,91],[674,346],[234,346]];
+  // Map the 900x506 screen box onto the laptop glass (corners measured on the 896x1195 photo)
+  const QUAD=[[241,616],[669,611],[674,866],[234,866]];
+  const FOCUS={x:130,y:585,w:660,h:500}; // laptop + hand region the camera pushes in to
+  function place(){
+    if(phoneMQ.matches){rig.style.width='';rig.style.left='';rig.style.top='';return;}
+    const vw=innerWidth,vh=innerHeight,w=Math.min(vw*.96,vh*.96*896/1195);
+    rig.style.width=w+'px';rig.style.left=(vw-w)/2+'px';rig.style.top=(vh-w*1195/896)/2+'px';
+  }
+  function zoom(){
+    const vw=innerWidth,vh=innerHeight,k=rig.offsetWidth/896;
+    const s=Math.min(vw*.94/(FOCUS.w*k),vh*.9/(FOCUS.h*k));
+    const cx=(FOCUS.x+FOCUS.w/2)*k,cy=(FOCUS.y+FOCUS.h/2)*k;
+    return {s,x:vw/2-rig.offsetLeft-s*cx,y:vh/2-rig.offsetTop-s*cy};
+  }
   function adj(m){return[m[4]*m[8]-m[5]*m[7],m[2]*m[7]-m[1]*m[8],m[1]*m[5]-m[2]*m[4],m[5]*m[6]-m[3]*m[8],m[0]*m[8]-m[2]*m[6],m[2]*m[3]-m[0]*m[5],m[3]*m[7]-m[4]*m[6],m[1]*m[6]-m[0]*m[7],m[0]*m[4]-m[1]*m[3]];}
   function mm(a,b){const c=[];for(let i=0;i<3;i++)for(let j=0;j<3;j++){let t=0;for(let k=0;k<3;k++)t+=a[3*i+k]*b[3*k+j];c[3*i+j]=t;}return c;}
   function mv(m,v){return[m[0]*v[0]+m[1]*v[1]+m[2]*v[2],m[3]*v[0]+m[4]*v[1]+m[5]*v[2],m[6]*v[0]+m[7]*v[1]+m[8]*v[2]];}
@@ -207,7 +223,9 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
     gsap.set(imgs,{y:0,opacity:(i)=>i===0?1:0});
     gsap.set('.cap',{autoAlpha:0,y:16});
     gsap.set('#headline',{opacity:1,scale:1});
-    gsap.set('#rig',{scale:phoneMQ.matches?1.8:1.5,y:phoneMQ.matches?'38vh':'22vh',opacity:.3});
+    const desk=!phoneMQ.matches;
+    if(desk) gsap.set('#rig',{scale:1,x:0,y:0,opacity:1}); else gsap.set('#rig',{scale:1.8,x:0,y:'38vh',opacity:.3});
+    gsap.set('#hint',{autoAlpha:1});
     meter(0);
     const travel=im=>()=>-Math.max(0,im.offsetHeight-screen.clientHeight);
     tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:'#scroller',start:'top top',end:'bottom bottom',scrub:reduce?true:0.6,
@@ -215,21 +233,22 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
         const p=self.progress;
         meter(p<.43?0:p<.68?1:2);
       }}});
-    tl.to('#headline',{opacity:0,scale:.92,duration:.1})
-      .to('#rig',{scale:1,y:0,opacity:1,duration:.1,ease:'power2.inOut'},'<.02');
+    if(desk){tl.to('#hint',{autoAlpha:0,duration:.03}).to('#rig',{scale:()=>zoom().s,x:()=>zoom().x,y:()=>zoom().y,duration:.12,ease:'power2.inOut'},'<');}
+    else{tl.to('#headline',{opacity:0,scale:.92,duration:.1}).to('#rig',{scale:1,y:0,opacity:1,duration:.1,ease:'power2.inOut'},'<.02');}
     imgs.forEach((im,i)=>{
       const cap='#cap'+i;
       if(i>0){tl.to(imgs[i-1],{opacity:0,duration:.02}).to(im,{opacity:1,duration:.02},'<').to('#cap'+(i-1),{autoAlpha:0,y:-10,duration:.02},'<');}
       tl.to(cap,{autoAlpha:1,y:0,duration:.02})
         .to(im,{y:travel(im),duration:.22});
     });
-    tl.to('#rig',{scale:.86,opacity:.4,duration:.06}).to('#cap2',{autoAlpha:0,duration:.03},'<');
+    if(desk) tl.to('#rig',{scale:1,x:0,y:0,duration:.08,ease:'power2.inOut'}).to('#cap2',{autoAlpha:0,duration:.03},'<');
+    else tl.to('#rig',{scale:.86,opacity:.4,duration:.06}).to('#cap2',{autoAlpha:0,duration:.03},'<');
   }
 
-  function init(){setSources().then(()=>{fitScreen();build();ScrollTrigger.refresh();});}
+  function init(){setSources().then(()=>{place();fitScreen();build();ScrollTrigger.refresh();});}
   init();
   phoneMQ.addEventListener('change',init);
-  addEventListener('resize',()=>{fitScreen();ScrollTrigger.refresh();});
+  addEventListener('resize',()=>{place();fitScreen();ScrollTrigger.refresh();});
 })();
 </script>
 </body>
