@@ -1,6 +1,6 @@
-# Sites by Kay
+# Sites by Kato
 
-Portfolio site for SitesByKay.com. Plain static files, no build step.
+Portfolio site for SitesByKato.com. Plain static files, no build step.
 
 - `index.html`: the scroll showcase (laptop on desktop, phone frame on small screens).
 - `img/`: full-page screenshots of each site (`-desk` 900px wide, `-phone` 390px wide).
