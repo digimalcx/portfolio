@@ -38,10 +38,15 @@ a{color:inherit}
 .rig{position:absolute;left:0;top:0;aspect-ratio:896/1195;transform-origin:0 0}
 .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:6px;
   -webkit-mask-image:radial-gradient(120% 100% at 50% 60%,#000 60%,transparent 100%);mask-image:radial-gradient(120% 100% at 50% 60%,#000 60%,transparent 100%)}
-.screen{position:absolute;left:0;top:0;width:900px;height:506px;overflow:hidden;background:#000;transform-origin:0 0}
+.screen{position:absolute;left:0;top:0;width:900px;height:506px;overflow:hidden;background:#050507;transform-origin:0 0;box-shadow:inset 0 0 30px rgba(0,0,0,0.8)}
 .screen img{position:absolute;top:0;left:0;width:100%;max-width:none;display:block;will-change:transform;opacity:0}
 .screen img.first{opacity:1}
-.glare{position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.08),transparent 45%);pointer-events:none}
+
+/* High-end realistic glass reflections, backlighting, and tactile hand overlay */
+.screen-glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(216,168,90,0.12),transparent 70%);mix-blend-mode:screen;pointer-events:none;opacity:0.8;transition:opacity 0.5s ease}
+.glare{position:absolute;inset:0;background:linear-gradient(125deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,.03) 30%,transparent 50%,rgba(255,255,255,.02) 70%,transparent 100%);pointer-events:none}
+.hand-overlay{position:absolute;right:220px;bottom:120px;width:180px;height:180px;pointer-events:none;z-index:7;opacity:0.95;filter:drop-shadow(0 12px 24px rgba(0,0,0,0.4));will-change:transform}
+.hand-overlay svg{width:100%;height:100%;display:block}
 
 /* phone layout: a phone frame instead of the photo */
 .is-phone .rig{position:relative;left:auto;top:auto;width:min(300px,64vw,calc(46svh));aspect-ratio:390/844;transform-origin:50% 40%}
@@ -49,6 +54,8 @@ a{color:inherit}
 html:not(.is-phone) .headline{display:none}
 .is-phone .hint{display:none}
 .is-phone .photo{display:none}
+.is-phone .hand-overlay{display:none}
+.is-phone .screen-glow{display:none}
 .is-phone .screen{position:absolute;inset:0;width:auto;height:auto;transform:none!important;border-radius:30px;border:10px solid #242128;box-shadow:0 30px 80px -20px #000,0 0 0 1px #4a4550}
 .captions{position:absolute;left:var(--gutter-l);bottom:calc(28px + env(safe-area-inset-bottom,0px));z-index:6;width:min(360px,calc(100vw - 32px))}
 .cap{position:absolute;left:0;bottom:0;width:100%;display:grid;gap:8px;opacity:0;visibility:hidden;background:rgba(15,13,16,.82);padding:16px 18px;border-radius:14px;backdrop-filter:blur(8px)}
@@ -103,10 +110,19 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
     <div class="rig" id="rig">
       <img class="photo" src="img/desk-scene.jpg" alt="">
       <div class="screen" id="screen">
+        <div class="screen-glow"></div>
         <img class="first" data-site="harlem-haberdashery" alt="Harlem Haberdashery website scrolling">
         <img data-site="harlem-chocolate-factory" alt="Harlem Chocolate Factory website scrolling">
         <img data-site="bakery" alt="Bakery streetwear website scrolling">
         <div class="glare"></div>
+      </div>
+      <!-- Photorealistic tactile trackpad hand mockup -->
+      <div class="hand-overlay" id="hand">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M110 30C110 30 125 70 130 95C135 120 142 165 110 185C80 202 55 180 45 155C35 130 25 90 25 90" stroke="#b89774" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+          <path d="M125 65C125 65 148 85 158 105C168 125 172 150 155 170" stroke="#c4a27e" stroke-width="18" stroke-linecap="round" opacity="0.85"/>
+          <circle cx="115" cy="55" r="14" fill="#d0ae88" opacity="0.9"/>
+        </svg>
       </div>
     </div>
 
@@ -223,6 +239,7 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
     gsap.set(imgs,{y:0,opacity:(i)=>i===0?1:0});
     gsap.set('.cap',{autoAlpha:0,y:16});
     gsap.set('#headline',{opacity:1,scale:1});
+    gsap.set('#hand',{opacity:0,y:20});
     const desk=!phoneMQ.matches;
     if(desk) gsap.set('#rig',{scale:1,x:0,y:0,opacity:1}); else gsap.set('#rig',{scale:1.8,x:0,y:'38vh',opacity:.3});
     gsap.set('#hint',{autoAlpha:1});
@@ -233,15 +250,26 @@ footer{text-align:center;color:var(--dim);font:500 11px/1 var(--mono);letter-spa
         const p=self.progress;
         meter(p<.43?0:p<.68?1:2);
       }}});
-    if(desk){tl.to('#hint',{autoAlpha:0,duration:.03}).to('#rig',{scale:()=>zoom().s,x:()=>zoom().x,y:()=>zoom().y,duration:.12,ease:'power2.inOut'},'<');}
+    if(desk){
+      tl.to('#hint',{autoAlpha:0,duration:.03})
+        .to('#rig',{scale:()=>zoom().s,x:()=>zoom().x,y:()=>zoom().y,duration:.12,ease:'power2.inOut'},'<')
+        .to('#hand',{opacity:1,y:0,duration:.05},'<.05');
+    }
     else{tl.to('#headline',{opacity:0,scale:.92,duration:.1}).to('#rig',{scale:1,y:0,opacity:1,duration:.1,ease:'power2.inOut'},'<.02');}
+    
     imgs.forEach((im,i)=>{
       const cap='#cap'+i;
-      if(i>0){tl.to(imgs[i-1],{opacity:0,duration:.02}).to(im,{opacity:1,duration:.02},'<').to('#cap'+(i-1),{autoAlpha:0,y:-10,duration:.02},'<');}
+      if(i>0){
+        tl.to(imgs[i-1],{opacity:0,duration:.02})
+          .to(im,{opacity:1,duration:.02},'<')
+          .to('#cap'+(i-1),{autoAlpha:0,y:-10,duration:.02},'<')
+          .to('#hand',{y:i*10-5,rotation:i%2===0?-1:1,duration:.05},'<');
+      }
       tl.to(cap,{autoAlpha:1,y:0,duration:.02})
-        .to(im,{y:travel(im),duration:.22});
+        .to(im,{y:travel(im),duration:.22})
+        .to('#hand',{y:()=>Math.sin(i*2)*8 + 15, duration:.15},'<');
     });
-    if(desk) tl.to('#rig',{scale:1,x:0,y:0,duration:.08,ease:'power2.inOut'}).to('#cap2',{autoAlpha:0,duration:.03},'<');
+    if(desk) tl.to('#rig',{scale:1,x:0,y:0,duration:.08,ease:'power2.inOut'}).to('#cap2',{autoAlpha:0,duration:.03},'<').to('#hand',{opacity:0,y:20,duration:.03},'<');
     else tl.to('#rig',{scale:.86,opacity:.4,duration:.06}).to('#cap2',{autoAlpha:0,duration:.03},'<');
   }
 
